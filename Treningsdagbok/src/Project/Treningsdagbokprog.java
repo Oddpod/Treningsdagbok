@@ -23,6 +23,12 @@ public class Treningsdagbokprog {
         } catch (Exception e) {
             System.out.println("Exception thrown:" + e);
         }
+        try{
+            int meh = dagbok.newKey("Treningsdagbok");
+            System.out.println(meh);
+        } catch (Exception e){
+            System.out.println("meh");
+        }
     }
 
 
@@ -57,15 +63,18 @@ public class Treningsdagbokprog {
         try{
             java.sql.Connection myConn = DriverManager.getConnection(url, user, password);
             java.sql.Statement myStmt = myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select * from treningsøkt");
-            try {
-                myStmt.executeUpdate(sql);
-            } catch (Exception e) {
-                throw new MySQLIntegrityConstraintViolationException("meh");
-            }
+            ResultSet myRs = myStmt.executeQuery("select count(*) from treningsøkt");
+            System.out.println(myRs.getString("count(*)"));
+            return Integer.parseInt(myRs.getString("count(*)"));
+            //try {
+              //  myStmt.executeUpdate(sql);
+            //} catch (Exception e) {
+            //    throw new MySQLIntegrityConstraintViolationException("meh");
+            //}
         }
         catch (Exception exc){
             exc.printStackTrace();
         }
+        return 0;
     }
 }
