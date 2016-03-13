@@ -6,6 +6,7 @@ import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;;
 
 public class Treningsdagbokprog {
@@ -14,7 +15,7 @@ public class Treningsdagbokprog {
 
     private String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
     private String user = "root";
-    private String password = "meh";
+    private String password = "Julaften1!";
 
     public static void main(String[] args) {
         Treningsdagbokprog dagbok = new Treningsdagbokprog();
@@ -36,20 +37,16 @@ public class Treningsdagbokprog {
     public void regOvelse() throws SQLException {
         Scanner sc = new Scanner(System.in);
         System.out.println("Skriv inn Navn, type, beskrivelse, mål, inne?");
-        while(sc.hasNext()) {
-            String navnet = sc.next();
-            String type = sc.next();
-            String beskrivelse = sc.next();
-            String mål = sc.next();
-            Boolean inne = sc.nextBoolean();
-        }
-
+        sc.useDelimiter(",");
+        String line = sc.nextLine();
+        String[] lineArray = line.split(", ");
+        System.out.println(lineArray[0]);
         try {
             Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
             Statement myStat = (Statement) myConn.createStatement();
             String sql = " insert into øvelse "
-                    + "(navn, type, beskrivelse, mål, inne?, øktid, treningsid)"
-                    + "values(navnet, type, beskrivelse, mål, inne)";
+                    + "(navn, type, beskrivelse, mål, inne, øktid, treningsid)"
+                    + "values('lineArray[0]', 'lineArray[1]', 'lineArray[2]', 'lineArray[3]', 'lineArray[4]')";
             myStat.executeUpdate(sql);
         } catch (SQLException e) {
             System.out.println("Exception thrown" + e);
