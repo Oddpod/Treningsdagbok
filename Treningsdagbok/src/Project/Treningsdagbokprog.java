@@ -26,6 +26,14 @@ public class Treningsdagbokprog {
         }
     }
 
+    public int getØktid(){
+        return int øktid = myStmt.executeUpdate("select count(distinct øktid) from øvelseiøkt;") + 1;
+    }
+
+    public void ØvelseTilØvelseriøkt (String Øktnavn){
+        Scanner sc = new Scanner(system.in);
+        System.out.println("")
+    }
 
     public void regTreningsokt(){
         Scanner sc = new Scanner(System.in);
