@@ -1,57 +1,41 @@
 package Project;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Scanner;;
 
 public class Treningsdagbokprog {
 
-
-
     private String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
     private String user = "root";
-    private String password = "Julaften1!";
+    private String password = "AVGvisualstudio123?";
 
     public static void main(String[] args) {
         Treningsdagbokprog dagbok = new Treningsdagbokprog();
         try {
-            dagbok.regOvelse();
-        } catch (Exception e) {
-            System.out.println("Exception thrown:" + e);
+            int meh = dagbok.newKey("treningsøkt");
+            System.out.println(meh);;
+        } catch(Exception e){
+
         }
     }
 
-
-    public void regTreningsokt(){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Oppretter Treningsøkt..");
-        System.out.println("");
-        sc.close();
-    }
-
-    public void regOvelse() throws SQLException {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Skriv inn Navn, type, beskrivelse, mål, inne?");
-        sc.useDelimiter(",");
-        String line = sc.nextLine();
-        String[] lineArray = line.split(", ");
-        System.out.println(lineArray[0]);
+    public int newKey(String navn) throws MySQLIntegrityConstraintViolationException {
         try {
-            Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
-            Statement myStat = (Statement) myConn.createStatement();
-            String sql = " insert into øvelse "
-                    + "(navn, type, beskrivelse, mål, inne, øktid, treningsid)"
-                    + "values('lineArray[0]', 'lineArray[1]', 'lineArray[2]', 'lineArray[3]', 'lineArray[4]', '1', '1')";
-            myStat.executeUpdate(sql);
-        } catch (SQLException e) {
-            System.out.println("Exception thrown" + e);
+            Connection myConn = DriverManager.getConnection(url, user, password);
+            Statement myStmt = myConn.createStatement();
+            ResultSet myRs = myStmt.executeQuery("select count(*) from treningsøkt");
+            System.out.println(myRs.getString("count*"));
+            //String sql = " select * from navn count *";
+            //myStmt.executeUpdate(sql);
+        } catch (Exception e) {
+            throw new MySQLIntegrityConstraintViolationException("meh");
         }
-        sc.close();
-    }
 
+        return myRs.toInteger();
+    }
 }
