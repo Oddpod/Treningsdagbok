@@ -15,7 +15,7 @@ public class Treningsdagbokprog {
 
     private String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
     private String user = "root";
-    private String password = "Julaften1!";
+    private String password = "meh";
 
     public static void main(String[] args) {
         Treningsdagbokprog dagbok = new Treningsdagbokprog();
