@@ -18,9 +18,9 @@ public class Driver {
 			//2. Create a statement
 			Statement myStmt = myConn.createStatement();
 			//3. Execute SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from treningsøkt");
-			String sql = "insert into treningsøkt "
-					+ "(idtreningsøkt, dato/tidspunkt, varighet, personlig_form, notat, prestasjon )"
+			ResultSet myRs = myStmt.executeQuery("select * from treningsÃ¸kt");
+			String sql = "insert into treningsÃ¸kt "
+					+ "(idtreningsÃ¸kt, dato/tidspunkt, varighet, personlig_form, notat, prestasjon )"
 					+ " values(2, 31.12.1999, 45, 5, 'OH MY GOD', 9)";
 			myStmt.executeUpdate(sql);
 			//4. Process the result set
