@@ -46,11 +46,12 @@ public class Treningsdagbokprog {
             Statement myStat = (Statement) myConn.createStatement();
             String sql = " insert into øvelse "
                     + "(navn, type, beskrivelse, mål, inne, øktid, treningsid)"
-                    + "values('lineArray[0]', 'lineArray[1]', 'lineArray[2]', 'lineArray[3]', 'lineArray[4]')";
+                    + "values('lineArray[0]', 'lineArray[1]', 'lineArray[2]', 'lineArray[3]', 'lineArray[4]', '1', '1')";
             myStat.executeUpdate(sql);
         } catch (SQLException e) {
             System.out.println("Exception thrown" + e);
         }
+        sc.close();
     }
 
 }
