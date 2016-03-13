@@ -6,16 +6,6 @@ import java.util.Scanner;;
  */
 public class Treningsdagbokprog {
 
-
-    public void ØvelseTilØvelserIØkt(String ØvelseNavn){
-        String yo = "select count(distinct øktid) from øvelseriøkt;"
-        int øktid = myStmt.executeUpdate(yo) + 1
-        String getØvelse = "insert into øvelseriøkt(øktid , øvelsesnavn) values(" + øktid + "," + ØvelseNavn + " )"
-        myStmt.executeUpdate(getØvelse)
-    }
-
-
-
     private String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
     private String user = "root";
     private String password = "meh";

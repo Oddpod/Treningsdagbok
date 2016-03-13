@@ -18,7 +18,7 @@ public class Driver {
         String CT = sdf.format(dt);
 		String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
 		String user = "root";
-		String password = "AVGvisualstudio123?";
+		String password = "Julaften1!";
 		
 		try{
 			//1. Get a connection to database
