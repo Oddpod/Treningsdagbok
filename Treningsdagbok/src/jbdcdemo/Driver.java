@@ -15,7 +15,7 @@ public class Driver {
 		try{
 			//1. Get a connection to database
 			Connection myConn = DriverManager.getConnection(url, user, password);
-			//2. Create a statement
+			/* 2. Create a statement */
 			Statement myStmt = myConn.createStatement();
 			//3. Execute SQL query
 			ResultSet myRs = myStmt.executeQuery("select * from treningsøkt");
