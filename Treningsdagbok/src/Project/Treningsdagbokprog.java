@@ -5,13 +5,12 @@ import com.mysql.jdbc.Statement;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;;
 
 public class Treningsdagbokprog {
-
-
 
     private String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
     private String user = "root";
@@ -54,4 +53,19 @@ public class Treningsdagbokprog {
         sc.close();
     }
 
+    public int newKey(String navn){
+        try{
+            java.sql.Connection myConn = DriverManager.getConnection(url, user, password);
+            java.sql.Statement myStmt = myConn.createStatement();
+            ResultSet myRs = myStmt.executeQuery("select * from treningsøkt");
+            try {
+                myStmt.executeUpdate(sql);
+            } catch (Exception e) {
+                throw new MySQLIntegrityConstraintViolationException("meh");
+            }
+        }
+        catch (Exception exc){
+            exc.printStackTrace();
+        }
+    }
 }
