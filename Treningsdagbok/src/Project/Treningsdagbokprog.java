@@ -14,11 +14,13 @@ public class Treningsdagbokprog {
 
         String CT = sdf.format(dt);
         String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
-        String user = "student";
-        String password = "student";
+        String user = "root";
+        String password = "meh";
 
         Scanner sc = new Scanner(System.in);
-
+            System.out.println();
+            user = sc.nextLine();
+            password = sc.nextLine();
     }
 
 
