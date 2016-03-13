@@ -37,7 +37,7 @@ public class Treningsdagbokprog {
 
     public void ØvelseTilØvelseriøkt (String Øktnavn){
         Scanner sc = new Scanner(system.in);
-        System.out.println("")
+        System.out.println("Velg ")
     }
 
     public void regTreningsokt(){
