@@ -37,7 +37,9 @@ public class Treningsdagbokprog {
             System.out.println("Exception thrown:" + e);
         }*/
         try {
-            dagbok.ØvelseTilØvelseriøkt(1);
+            String ovelser = dagbok.getOvelser();
+            System.out.println(ovelser);
+            dagbok.ØvelseTilØvelseriøkt(1, ovelser);
         }catch (Exception e){
             System.out.println("Exception thrown:" + e);
         }
@@ -47,7 +49,7 @@ public class Treningsdagbokprog {
     //    return int øktid = myStmt.executeUpdate("select count(distinct øktid) from øvelseiøkt;") + 1;
     //}
 
-    public void ØvelseTilØvelseriøkt (int id ){
+    public void ØvelseTilØvelseriøkt (int id, String ovelser){
       Scanner sc = new Scanner(System.in);
         System.out.println("Skriv inn navnet på alle øvelsene du vil ha i økten");
         sc.useDelimiter(", ");
@@ -55,12 +57,18 @@ public class Treningsdagbokprog {
         String[] lineArray = line.split(", ");
         for (String ovelse : lineArray) {
             try {
+                if( !ovelser.contains(ovelse)){
+                    Treningsdagbokprog tdb = new Treningsdagbokprog();
+                    System.out.println(ovelse + " ligger ikke inne i databasen og må derfor opprettes");
+                    tdb.regOvelse();
+                }
                 Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
                 Statement myStat = (Statement) myConn.createStatement();
                 String sql = " insert into øvelseriøkt "
                         + "(øktid, øvelsesnavn)"
                         + "values( '"+id+"', '"+ovelse+"')";
                 myStat.executeUpdate(sql);
+                System.out.println('"');
             } catch (SQLException e) {
                 System.out.println("Exception thrown" + e);
             }
@@ -115,7 +123,7 @@ public class Treningsdagbokprog {
             Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
             Statement myStat = (Statement) myConn.createStatement();
             String sql = " insert into øvelse "
-                    + "(navn, type, beskrivelse, mål, inne, øktid, treningsid)"
+                    + "(navn, type, beskrivelse, mål, inne)"
                     + "values('"+lineArray[0]+"', '"+lineArray[1]+"', '"+lineArray[2]+"', '"+lineArray[3]+"', '"+inne+"')";
             myStat.executeUpdate(sql);
         } catch (SQLException e) {
@@ -137,5 +145,33 @@ public class Treningsdagbokprog {
         } catch (SQLException e) {
             System.out.println("Exception thrown" + e);
         }
+    }
+
+    public void visLogg(){
+        try {
+            Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
+            Statement myStmt = (Statement) myConn.createStatement();
+            ResultSet myRs = myStmt.executeQuery("select datotid, notat from treningsøkt");
+            while (myRs.next()){
+                System.out.println(myRs.getString("datotid") + ", " + myRs.getString("notat"));
+            }
+        }catch (SQLException e) {
+            System.out.println("Exception thrown" + e);
+        }
+    }
+
+    public String getOvelser() {
+        String ovelser = "";
+        try {
+            Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
+            Statement myStmt = (Statement) myConn.createStatement();
+            ResultSet myRs = myStmt.executeQuery("SELECT  navn from øvelse");
+            while (myRs.next()) {
+                ovelser = ovelser + myRs.getString("navn") + " ";
+            }
+        } catch (SQLException e) {
+            System.out.println("Exception thrown" + e);
+        }
+        return ovelser;
     }
 }
