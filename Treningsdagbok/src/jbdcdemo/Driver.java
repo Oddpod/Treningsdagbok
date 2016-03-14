@@ -18,7 +18,7 @@ public class Driver {
         String CT = sdf.format(dt);
 		String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
 		String user = "root";
-		String password = "Julaften1!";
+		String password = "AVGvisualstudio123?";
 		
 		try{
 			//1. Get a connection to database
@@ -27,16 +27,14 @@ public class Driver {
 			Statement myStmt = myConn.createStatement();
 			//3. Execute SQL query
 			ResultSet myRs = myStmt.executeQuery("select * from treningsøkt");
-            int i = 3;
 			String sql = "insert into treningsøkt "
-					+ "(idtreningsøkt, datotid, varighet, personlig_form, notat, prestasjon )"
-					+ " values('', '1999.01.12 23:54:12', '45', '5', 'OH MY GOD', '9')";
+					+ "( datotid, varighet, personlig_form, notat, prestasjon )"
+					+ " values('1999.01.11 23:54:12', '45', '5', 'OH MY GOD', '9')";
             try {
                 myStmt.executeUpdate(sql);
             } catch (Exception e) {
-                throw new MySQLIntegrityConstraintViolationException("meh");
+             //   throw new MySQLIntegrityConstraintViolationException("meh");
             }
-            i++;
 			// 4. Process the result set
             ResultSet myRsi = myStmt.executeQuery("select * from treningsøkt");
 			while (myRsi.next()){

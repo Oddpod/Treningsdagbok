@@ -73,23 +73,4 @@ public class Treningsdagbokprog {
         }
         sc.close();
     }
-
-//    public int newKey(String navn){
-  //      try{
-    //        java.sql.Connection myConn = DriverManager.getConnection(url, user, password);
-    //      java.sql.Statement myStmt = myConn.createStatement();
-      //      ResultSet myRs = myStmt.executeQuery("select count(*) from treningsøkt");
-        //    System.out.println(myRs.getString("count(*)"));
-          //  return Integer.parseInt(myRs.getString("count(*)"));
-            //try {
-              //  myStmt.executeUpdate(sql);
-            //} catch (Exception e)0 {
-            //    throw new MySQLIntegrityConstraintViolationException("meh");
-            //}
-       // }
-       // catch (Exception exc){
-        //    exc.printStackTrace();
-        // }
-        //return 0;
-    // }
 }
