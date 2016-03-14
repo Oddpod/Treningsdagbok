@@ -24,7 +24,7 @@ public class Treningsdagbokprog {
             dagbok.regOvelse();
         } catch (Exception e) {
             System.out.println("Exception thrown:" + e);
-        }*/
+        }
         try{
             dagbok.regTreningsokt();
         } catch (Exception e){
@@ -35,6 +35,11 @@ public class Treningsdagbokprog {
             dagbok.visOkt(1);
         }catch (Exception e){
             System.out.println("Exception thrown:" + e);
+        }*/
+        try {
+            dagbok.ØvelseTilØvelseriøkt(1);
+        }catch (Exception e){
+            System.out.println("Exception thrown:" + e);
         }
     }
 
@@ -42,7 +47,7 @@ public class Treningsdagbokprog {
     //    return int øktid = myStmt.executeUpdate("select count(distinct øktid) from øvelseiøkt;") + 1;
     //}
 
-    public void ØvelseTilØvelseriøkt (String Øktnavn){
+    public void ØvelseTilØvelseriøkt (int id ){
       Scanner sc = new Scanner(System.in);
         System.out.println("Skriv inn navnet på alle øvelsene du vil ha i økten");
         sc.useDelimiter(", ");
@@ -53,8 +58,8 @@ public class Treningsdagbokprog {
                 Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
                 Statement myStat = (Statement) myConn.createStatement();
                 String sql = " insert into øvelseriøkt "
-                        + "(navn, type, beskrivelse, mål, inne, øktid, treningsid)"
-                        + "values()";
+                        + "(øktid, øvelsesnavn)"
+                        + "values( '"+id+"', '"+ovelse+"')";
                 myStat.executeUpdate(sql);
             } catch (SQLException e) {
                 System.out.println("Exception thrown" + e);
