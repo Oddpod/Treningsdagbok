@@ -38,7 +38,7 @@ public class Treningsdagbokprog {
         }*/
         try {
             String ovelser = dagbok.getOvelser();
-            System.out.println(ovelser);
+            System.out.println("Øvelser som ligger inne: " + ovelser);
             dagbok.ØvelseTilØvelseriøkt(1, ovelser);
         }catch (Exception e){
             System.out.println("Exception thrown:" + e);
@@ -68,7 +68,6 @@ public class Treningsdagbokprog {
                         + "(øktid, øvelsesnavn)"
                         + "values( '"+id+"', '"+ovelse+"')";
                 myStat.executeUpdate(sql);
-                System.out.println('"');
             } catch (SQLException e) {
                 System.out.println("Exception thrown" + e);
             }
