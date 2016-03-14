@@ -7,6 +7,7 @@ import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;;
 
@@ -35,10 +36,28 @@ public class Treningsdagbokprog {
     //    return int øktid = myStmt.executeUpdate("select count(distinct øktid) from øvelseiøkt;") + 1;
     //}
 
-    //public void ØvelseTilØvelseriøkt (String Øktnavn){
-    //  Scanner sc = new Scanner(system.in);
-      //  System.out.println("Velg ")
-    //}
+    public void ØvelseTilØvelseriøkt (String Øktnavn){
+      Scanner sc = new Scanner(System.in);
+        System.out.println("Skriv inn navnet på alle øvelsene du vil ha i økten");
+        sc.useDelimiter(", ");
+        String line = sc.nextLine();
+        String[] lineArray = line.split(", ");
+        for (String ovelse : lineArray) {
+            try {
+                Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
+                Statement myStat = (Statement) myConn.createStatement();
+                String sql = " insert into øvelseriøkt "
+                        + "(navn, type, beskrivelse, mål, inne, øktid, treningsid)"
+                        + "values()";
+                myStat.executeUpdate(sql);
+            } catch (SQLException e) {
+                System.out.println("Exception thrown" + e);
+            }
+        }
+
+
+
+    }
 
     public void regTreningsokt(){
         Scanner sc = new Scanner(System.in);
@@ -46,7 +65,7 @@ public class Treningsdagbokprog {
         System.out.println("");
         sc.close();
     }
-
+// Registrere ny øvelse
     public void regOvelse() throws SQLException {
         Scanner sc = new Scanner(System.in);
         System.out.println("Skriv inn Navn, type, beskrivelse, mål, inne?");
@@ -66,7 +85,7 @@ public class Treningsdagbokprog {
             Statement myStat = (Statement) myConn.createStatement();
             String sql = " insert into øvelse "
                     + "(navn, type, beskrivelse, mål, inne, øktid, treningsid)"
-                    + "values('"+lineArray[0]+"', '"+lineArray[1]+"', '"+lineArray[2]+"', '"+lineArray[3]+"', '"+inne+"', '1', '1')";
+                    + "values('"+lineArray[0]+"', '"+lineArray[1]+"', '"+lineArray[2]+"', '"+lineArray[3]+"', '"+inne+"')";
             myStat.executeUpdate(sql);
         } catch (SQLException e) {
             System.out.println("Exception thrown" + e);
