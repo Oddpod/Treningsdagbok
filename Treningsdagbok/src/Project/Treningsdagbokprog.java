@@ -24,12 +24,6 @@ public class Treningsdagbokprog {
         } catch (Exception e) {
             System.out.println("Exception thrown:" + e);
         }
-       // try{
-         //   int meh = dagbok.newKey("Treningsdagbok");
-        // System.out.println(meh);
-        //} catch (Exception e){
-        //  System.out.println("meh");
-        // }
     }
 
   //  public int getØktid(){
@@ -54,16 +48,29 @@ public class Treningsdagbokprog {
                 System.out.println("Exception thrown" + e);
             }
         }
-
-
-
     }
 
     public void regTreningsokt(){
         Scanner sc = new Scanner(System.in);
         System.out.println("Oppretter Treningsøkt..");
-        System.out.println("");
-        sc.close();
+        System.out.println("Skriv inn datotid, varighet, personlig form, notat, prestasjon");
+        sc.useDelimiter(", ");
+        String line = sc.nextLine();
+        String[] lineArray = line.split(", ");
+        try {
+            Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
+            Statement myStat = (Statement) myConn.createStatement();
+            String sql = "insert into treningsøkt "
+                    + "( datotid, varighet, personlig_form, notat, prestasjon )"
+                    + " values('" + lineArray[0] + "', '" + lineArray[1] + "', '" + lineArray[2] + "', '"
+                    + lineArray[3] + "', '" + lineArray[4] + "')";
+            myStat.executeUpdate(sql);
+            String key = "Select idtreningsøkt from treningsøkt";
+        } catch (Exception e){
+            System.out.println("Exception thrown" + e);
+        }
+
+            sc.close();
     }
 // Registrere ny øvelse
     public void regOvelse() throws SQLException {
