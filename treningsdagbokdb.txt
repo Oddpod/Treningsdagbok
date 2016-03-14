@@ -1,0 +1,71 @@
+CREATE DATABASE `treningsdagbokdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE TABLE `kondisjon/styrke` (
+  `Belastning` varchar(10) NOT NULL,
+  `Ant Repetisjoner` int(11) NOT NULL,
+  `Ant sett` int(11) NOT NULL,
+  `Navn` varchar(45) NOT NULL,
+  `Øvelsesnavn` varchar(45) NOT NULL,
+  `GruppeId` int(11) NOT NULL,
+  `idKondisjon/styrke` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`idKondisjon/styrke`),
+  KEY `FK_øvelsesnavn_idx` (`Øvelsesnavn`),
+  KEY `FK_ks_gruppeid_idx` (`GruppeId`),
+  CONSTRAINT `FK_ks_gruppeid` FOREIGN KEY (`GruppeId`) REFERENCES `undergruppe` (`Gruppeid`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_ks_øvelsesnavn` FOREIGN KEY (`Øvelsesnavn`) REFERENCES `øvelse` (`Navn`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `resultat` (
+  `Øvelsesnavn` varchar(45) NOT NULL,
+  `Bragd` varchar(45) NOT NULL,
+  `idResultat` int(11) NOT NULL AUTO_INCREMENT,
+  `Sett` int(11) NOT NULL,
+  PRIMARY KEY (`idResultat`),
+  KEY `FK_res_øvelsesnavn_idx` (`Øvelsesnavn`),
+  CONSTRAINT `FK_res_øvelsesnavn` FOREIGN KEY (`Øvelsesnavn`) REFERENCES `øvelse` (`Navn`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `treningsøkt` (
+  `idTreningsøkt` int(11) NOT NULL AUTO_INCREMENT,
+  `Datotid` datetime NOT NULL,
+  `Varighet` int(11) NOT NULL,
+  `Personlig_form` int(11) DEFAULT NULL,
+  `Notat` varchar(45) DEFAULT NULL,
+  `Prestasjon` int(11) DEFAULT NULL,
+  `Sett` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idTreningsøkt`),
+  UNIQUE KEY `Dato/tidspunkt_UNIQUE` (`Datotid`),
+  UNIQUE KEY `idTreningsøkt_UNIQUE` (`idTreningsøkt`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `undergruppe` (
+  `Gruppenavn` varchar(20) NOT NULL,
+  `Gruppeid` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`Gruppeid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `utholdenhet` (
+  `Lengde` int(11) NOT NULL,
+  `idGruppe` int(11) NOT NULL,
+  `idUtholdenhet` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`idUtholdenhet`),
+  KEY `FK_ut_gruppeid_idx` (`idGruppe`),
+  CONSTRAINT `FK_ut_gruppeid` FOREIGN KEY (`idGruppe`) REFERENCES `undergruppe` (`Gruppeid`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `øvelse` (
+  `Navn` varchar(20) NOT NULL,
+  `Type` varchar(45) DEFAULT NULL,
+  `Beskrivelse` varchar(45) DEFAULT NULL,
+  `Mål` varchar(45) DEFAULT NULL,
+  `Inne?` tinyint(1) NOT NULL,
+  PRIMARY KEY (`Navn`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `øvelseriøkt` (
+  `Øktid` int(11) NOT NULL,
+  `Øvelsesnavn` varchar(45) NOT NULL,
+  KEY `FK_øvelsesnavn_idx` (`Øvelsesnavn`),
+  KEY `FK_øktid_idx` (`Øktid`),
+  CONSTRAINT `FK_øktid` FOREIGN KEY (`Øktid`) REFERENCES `treningsøkt` (`idTreningsøkt`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_øvelsesnavn` FOREIGN KEY (`Øvelsesnavn`) REFERENCES `øvelse` (`Navn`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
