@@ -14,7 +14,7 @@ public class Treningsdagbokprog {
 
     private String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
     private String user = "root";
-    private String password = "meh";
+    private String password = "Julaften1!";
 
     public static void main(String[] args) {
         Treningsdagbokprog dagbok = new Treningsdagbokprog();
@@ -23,22 +23,22 @@ public class Treningsdagbokprog {
         } catch (Exception e) {
             System.out.println("Exception thrown:" + e);
         }
-        try{
-            int meh = dagbok.newKey("Treningsdagbok");
-            System.out.println(meh);
-        } catch (Exception e){
-            System.out.println("meh");
-        }
+       // try{
+         //   int meh = dagbok.newKey("Treningsdagbok");
+        // System.out.println(meh);
+        //} catch (Exception e){
+        //  System.out.println("meh");
+        // }
     }
 
-    public int getØktid(){
-        return int øktid = myStmt.executeUpdate("select count(distinct øktid) from øvelseiøkt;") + 1;
-    }
+  //  public int getØktid(){
+    //    return int øktid = myStmt.executeUpdate("select count(distinct øktid) from øvelseiøkt;") + 1;
+    //}
 
-    public void ØvelseTilØvelseriøkt (String Øktnavn){
-        Scanner sc = new Scanner(system.in);
-        System.out.println("Velg ")
-    }
+    //public void ØvelseTilØvelseriøkt (String Øktnavn){
+    //  Scanner sc = new Scanner(system.in);
+      //  System.out.println("Velg ")
+    //}
 
     public void regTreningsokt(){
         Scanner sc = new Scanner(System.in);
@@ -54,12 +54,19 @@ public class Treningsdagbokprog {
         String line = sc.nextLine();
         String[] lineArray = line.split(", ");
         System.out.println(lineArray[0]);
+        int inne;
+        if (lineArray[4] == "inne") {
+            inne = 1;
+        } else {
+            inne = 0;
+        }
+
         try {
             Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
             Statement myStat = (Statement) myConn.createStatement();
             String sql = " insert into øvelse "
                     + "(navn, type, beskrivelse, mål, inne, øktid, treningsid)"
-                    + "values('lineArray[0]', 'lineArray[1]', 'lineArray[2]', 'lineArray[3]', 'lineArray[4]', '1', '1')";
+                    + "values('"+lineArray[0]+"', '"+lineArray[1]+"', '"+lineArray[2]+"', '"+lineArray[3]+"', '"+inne+"', '1', '1')";
             myStat.executeUpdate(sql);
         } catch (SQLException e) {
             System.out.println("Exception thrown" + e);
@@ -67,22 +74,22 @@ public class Treningsdagbokprog {
         sc.close();
     }
 
-    public int newKey(String navn){
-        try{
-            java.sql.Connection myConn = DriverManager.getConnection(url, user, password);
-            java.sql.Statement myStmt = myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select count(*) from treningsøkt");
-            System.out.println(myRs.getString("count(*)"));
-            return Integer.parseInt(myRs.getString("count(*)"));
+//    public int newKey(String navn){
+  //      try{
+    //        java.sql.Connection myConn = DriverManager.getConnection(url, user, password);
+    //      java.sql.Statement myStmt = myConn.createStatement();
+      //      ResultSet myRs = myStmt.executeQuery("select count(*) from treningsøkt");
+        //    System.out.println(myRs.getString("count(*)"));
+          //  return Integer.parseInt(myRs.getString("count(*)"));
             //try {
               //  myStmt.executeUpdate(sql);
-            //} catch (Exception e) {
+            //} catch (Exception e)0 {
             //    throw new MySQLIntegrityConstraintViolationException("meh");
             //}
-        }
-        catch (Exception exc){
-            exc.printStackTrace();
-        }
-        return 0;
-    }
+       // }
+       // catch (Exception exc){
+        //    exc.printStackTrace();
+        // }
+        //return 0;
+    // }
 }
