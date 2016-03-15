@@ -16,18 +16,12 @@ public class Treningsdagbokprog {
     private String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
     private String user = "root";
     private String password = "AVGvisualstudio123?";
-    int id = 0;
 
     public static void main(String[] args) {
         Treningsdagbokprog dagbok = new Treningsdagbokprog();
         /*try {
-            dagbok.regOvelse();
+             dagbok.regOvelse();
         } catch (Exception e) {
-            System.out.println("Exception thrown:" + e);
-        }
-        try{
-            dagbok.regTreningsokt();
-        } catch (Exception e){
             System.out.println("Exception thrown:" + e);
         }
         try{
@@ -38,8 +32,9 @@ public class Treningsdagbokprog {
         }*/
         try {
             String ovelser = dagbok.getOvelser();
+            int id = dagbok.regTreningsokt();
             System.out.println("Øvelser som ligger inne: " + ovelser);
-            dagbok.ØvelseTilØvelseriøkt(1, ovelser);
+            dagbok.ØvelseTilØvelseriøkt(id, ovelser);
         }catch (Exception e){
             System.out.println("Exception thrown:" + e);
         }
@@ -74,7 +69,7 @@ public class Treningsdagbokprog {
         }
     }
 
-    public void regTreningsokt(){
+    public int regTreningsokt(){
         Scanner sc = new Scanner(System.in);
         System.out.println("Oppretter Treningsøkt..");
         System.out.println("Skriv inn datotid, varighet, personlig form, notat, prestasjon");
@@ -94,14 +89,13 @@ public class Treningsdagbokprog {
             ResultSet myRsi = myStat.executeQuery(key);
             while (myRsi.next()){
                 System.out.println(myRsi.getString("Max(idtreningsøkt)"));
-                this.id = Integer.parseInt(myRsi.getString("Max(idtreningsøkt)"));
-                System.out.println(this.id);
+                return Integer.parseInt(myRsi.getString("Max(idtreningsøkt)"));
             }
         } catch (Exception e){
             System.out.println("Exception thrown" + e);
         }
-
-            sc.close();
+        sc.close();
+        return -1;
     }
 // Registrere ny øvelse
     public void regOvelse() throws SQLException {
@@ -172,5 +166,24 @@ public class Treningsdagbokprog {
             System.out.println("Exception thrown" + e);
         }
         return ovelser;
+    }
+
+    public void regStyrkeKond(){
+
+    }
+    public void regUthold(String øvelsesnavn){
+         Scanner sc = new Scanner(System.in);
+         System.out.println("Lengde?");
+         String line = sc.nextLine();
+         try {
+             Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
+             Statement myStmt = (Statement) myConn.createStatement();
+             String update = " insert into utholdenhet "
+                     + "(lengde, øvelsesnavn)"
+                     + "values( '"+line+"', '"+øvelsesnavn+"')";
+             myStmt.executeUpdate(update);
+         }catch (SQLException e) {
+             System.out.println("Exception thrown" + e);
+         }
     }
 }
