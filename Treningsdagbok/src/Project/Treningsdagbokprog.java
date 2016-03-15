@@ -45,6 +45,17 @@ public class Treningsdagbokprog {
         }
     }
 
+
+    public void startConnectiontoDatabase() {
+        try {
+            Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
+            Statement myStat = (Statement) myConn.createStatement();
+        }  catch (SQLException e) {
+                System.out.println("Exception thrown " + e);
+        }
+
+    }
+
   //  public int getØktid(){
     //    return int øktid = myStmt.executeUpdate("select count(distinct øktid) from øvelseiøkt;") + 1;
     //}
@@ -58,9 +69,8 @@ public class Treningsdagbokprog {
         for (String ovelse : lineArray) {
             try {
                 if( !ovelser.contains(ovelse)){
-                    Treningsdagbokprog tdb = new Treningsdagbokprog();
                     System.out.println(ovelse + " ligger ikke inne i databasen og må derfor opprettes");
-                    tdb.regOvelse();
+                    regOvelse();
                 }
                 Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
                 Statement myStat = (Statement) myConn.createStatement();
@@ -71,7 +81,14 @@ public class Treningsdagbokprog {
             } catch (SQLException e) {
                 System.out.println("Exception thrown" + e);
             }
+
         }
+    }
+
+
+    public void regForhold() {
+        Scanner sc = new Scanner(System.in);
+
     }
 
     public void regTreningsokt(){
