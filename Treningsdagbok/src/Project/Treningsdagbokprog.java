@@ -51,7 +51,6 @@ public class Treningsdagbokprog {
         } */
     }
 
-
     public void startConnectiontoDatabaseAndUpdate(String sql) {
         try {
             Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
@@ -316,11 +315,13 @@ public class Treningsdagbokprog {
             while(myRs.next()){
                 ovelser += myRs.getString("øvelsesnavn") + " ";
             }
+            runUpdate(id);
 
         }catch (SQLException e) {
             System.out.println("Exception thrown" + e);
         }
     }
+    // sletter øvelser som blir skrevet inn
     public void runUpdate(int id){
         Scanner sca = new Scanner(System.in);
         System.out.println("Hvilke øvelser ønsker du å fjerne?( eks: Løp, Styrke, etc...");
@@ -330,11 +331,13 @@ public class Treningsdagbokprog {
         for(String ovelse: lineArray){
             startConnectiontoDatabaseAndUpdate("Delete from øvelseriøkt where '"+ovelse+"'= øvelsesnavn");
         }
-        try{
-            System.out.println();
-            regOvelse();
-        } catch (SQLException e) {
-            System.out.println("Exception thrown" + e);
+        System.out.println("Vil du legge inn flere øvelser (1/0 - ja/nei)");
+        int svar = Integer.parseInt(sca.nextLine());
+        if(svar == 1){
+            String ovelser = getOvelser();
+            System.out.println("hei");
+            ØvelseTilØvelseriøkt(id, ovelser);
         }
     }
+
 }
