@@ -21,7 +21,7 @@ public class Treningsdagbokprog {
     public static void main(String[] args) {
         Treningsdagbokprog dagbok = new Treningsdagbokprog();
         try{
-            dagbok.repeatOkt();
+            dagbok.regResultat();
         } catch (Exception e) {
             System.out.println("Exception thrown:" + e);
         }
@@ -208,37 +208,44 @@ public class Treningsdagbokprog {
             Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
             Statement mystat = (Statement) myConn.createStatement();
             String sql = " insert into resultat "
-                    + "(øvelsesnavn, bragd, resultatid, antallsett)"
-                    + "values ('" + lineArray[0] + "', '" + lineArray[1] + "', '" + lineArray[3] + "')";
+                    + "(øvelsesnavn, bragd, sett)"
+                    + "values ('" + lineArray[0] + "', '" + lineArray[1] + "', '" + lineArray[2] + "')";
             mystat.executeUpdate(sql);
         } catch (SQLException e) {
             System.out.println("Exception thrown" + e);
         }
-        sc.close();
-        MålVsBragd(Integer.parseInt(lineArray[1]), lineArray[2]);
+        MålVsBragd(Integer.parseInt(lineArray[1]), lineArray[0]);
     }
 
-    public void MålVsBragd(int bragd, String øvelse ) throws SQLException {
-        String sql = "select mål, måltype from øvelse where øvelsestype = '" + øvelse + "'";
-        ResultSet result = startConnectiontoDatabaseAndQuery(sql);
+    public void MålVsBragd(int bragd, String øvelse ) {
+        String sql = "select mål, måltype from øvelse where navn = '"+øvelse+"'";
         try {
-            int mål = result.getInt(0);
-            boolean måltype = result.getBoolean(1);
-            if (måltype) {
-                if (mål < bragd) {
-                    System.out.println("Du har nådd målet for" + øvelse + "på tide å registrere et nytt mål");
-                    Scanner sc = new Scanner(System.in);
-                    String line = sc.nextLine();
-                    System.out.println("Skriv inn nytt mål i tid/kg/meter");
-                    String sql2 = "uppdate øvelse set mål=" + Integer.parseInt(line) + "where øvelsestype ='" + øvelse + "'";
-                }
-            } else {
-                if (mål > bragd) {
-                    System.out.println("Du har nådd målet for" + øvelse + "på tide å registrere et nytt mål");
-                    Scanner sc = new Scanner(System.in);
-                    String line = sc.nextLine();
-                    System.out.println("Skriv inn nytt mål i tid/kg/meter");
-                    String sql2 = "uppdate øvelse set mål=" + Integer.parseInt(line) + "where øvelsestype ='" + øvelse + "'";
+            ResultSet result = startConnectiontoDatabaseAndQuery(sql);
+            while(result.next()) {
+                int mål = result.getInt("mål");
+                System.out.println(mål);
+                System.out.println(result.getBoolean("måltype"));
+                boolean måltype = result.getBoolean("måltype");
+                if (måltype) {
+                    if (mål <= bragd) {
+                        Scanner sc = new Scanner(System.in);
+                        System.out.println("Du har nådd målet for " + øvelse + " på tide å registrere et nytt mål");
+                        System.out.println("Skriv inn nytt mål i tid/kg/meter");
+                        String line = sc.nextLine();
+                        String sql2 = "update øvelse set mål='" + Integer.parseInt(line) + "' where navn ='" + øvelse + "'";
+                        startConnectiontoDatabaseAndUpdate(sql2);
+                        sc.close();
+                    }
+                } else {
+                    if (mål >= bragd) {
+                        Scanner sc = new Scanner(System.in);
+                        System.out.println("Du har nådd målet for" + øvelse + "på tide å registrere et nytt mål");
+                        String line = sc.nextLine();
+                        System.out.println("Skriv inn nytt mål i tid/kg/meter");
+                        String sql2 = "uppdate øvelse set mål='" + Integer.parseInt(line) + "' where navn ='" + øvelse + "'";
+                        startConnectiontoDatabaseAndUpdate(sql2);
+                        sc.close();
+                    }
                 }
             }
         }
@@ -310,7 +317,6 @@ public class Treningsdagbokprog {
             sca.useDelimiter(", ");
             String line = sca.nextLine();
             String[] lineArray = line.split(", ");
-            ØvelseTilØvelseriøkt (id, ovelser);
             sca.close();
 
         }catch (SQLException e) {
