@@ -153,6 +153,29 @@ public class Treningsdagbokprog {
 
 
     }
+
+    public void regResultat() throws SQLException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Skriv inn øvelsesnavn, bragd, antallsett");
+        sc.useDelimiter(",");
+        String line = sc.nextLine();
+        String[] lineArray= line.split(", ");
+        try {
+            Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
+            Statement mystat = (Statement) myConn.createStatement();
+            String sql = " insert into resultat "
+                    + "(øvelsesnavn, bragd, resultatid, antallsett)"
+                    + "values ('" + lineArray[0] + "', '" + lineArray[1] + "', '" + lineArray[3] + "')";
+            mystat.executeUpdate(sql);
+        } catch (SQLException e) {
+            System.out.println("Exception thrown" + e);
+        }
+        sc.close();
+    }
+
+    public void MålVsBragd(){
+        
+    }
     public void visOkt(int øktid){
 
         try {
