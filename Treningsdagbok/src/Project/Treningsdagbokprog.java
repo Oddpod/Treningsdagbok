@@ -176,10 +176,38 @@ public class Treningsdagbokprog {
             System.out.println("Exception thrown" + e);
         }
         sc.close();
+        MålVsBragd(Integer.parseInt(lineArray[1]), lineArray[2]);
     }
 
-    public void MålVsBragd(){
-        
+    public void MålVsBragd(int bragd, String øvelse ) throws SQLException {
+        String sql = "select mål, måltype from øvelse where øvelsestype = '" + øvelse + "'";
+        ResultSet result = startConnectiontoDatabaseAndQuery(sql);
+        try {
+            int mål = result.getInt(0);
+            boolean måltype = result.getBoolean(1);
+            if (måltype) {
+                if (mål < bragd) {
+                    System.out.println("Du har nådd målet for" + øvelse + "på tide å registrere et nytt mål");
+                    Scanner sc = new Scanner(System.in);
+                    String line = sc.nextLine();
+                    System.out.println("Skriv inn nytt mål i tid/kg/meter");
+                    String sql2 = "uppdate øvelse set mål=" + Integer.parseInt(line) + "where øvelsestype ='" + øvelse + "'";
+                }
+            } else {
+                if (mål > bragd) {
+                    System.out.println("Du har nådd målet for" + øvelse + "på tide å registrere et nytt mål");
+                    Scanner sc = new Scanner(System.in);
+                    String line = sc.nextLine();
+                    System.out.println("Skriv inn nytt mål i tid/kg/meter");
+                    String sql2 = "uppdate øvelse set mål=" + Integer.parseInt(line) + "where øvelsestype ='" + øvelse + "'";
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Exception thrown" + e);
+        }
+
+
     }
     public void visOkt(int øktid){
 
