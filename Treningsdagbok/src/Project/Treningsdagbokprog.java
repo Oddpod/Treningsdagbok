@@ -15,17 +15,22 @@ public class Treningsdagbokprog {
 
     private String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
     private String user = "root";
-    private String password = "Julaften1!";
+    private String password = "AVGvisualstudio123?";
     int id = 0;
 
     public static void main(String[] args) {
         Treningsdagbokprog dagbok = new Treningsdagbokprog();
-        try {
+        try{
+            dagbok.repeatOkt();
+        } catch (Exception e) {
+            System.out.println("Exception thrown:" + e);
+        }
+        /*try {
             dagbok.regOvelse();
         } catch (Exception e) {
             System.out.println("Exception thrown:" + e);
         }
-        /* try{
+         try{
 
             dagbok.regTreningsokt();
         } catch (Exception e){
@@ -193,7 +198,7 @@ public class Treningsdagbokprog {
 
     public void visLogg(){
         try {
-            ResultSet myRs = startConnectiontoDatabaseAndQuery("select datotid, notat from treningsøkt");
+            ResultSet myRs = startConnectiontoDatabaseAndQuery("select datotid, notat from treningsøkt order by datotid");
             while (myRs.next()){
                 System.out.println(myRs.getString("datotid") + ", " + myRs.getString("notat"));
             }
@@ -213,5 +218,28 @@ public class Treningsdagbokprog {
             System.out.println("Exception thrown" + e);
         }
         return ovelser;
+    }
+
+    public void repeatOkt(){
+            String ovelser= "";
+        try{
+            ResultSet myRsi = startConnectiontoDatabaseAndQuery("select datotid, notat from treningsøkt");
+            while (myRsi.next()){
+                System.out.println(myRsi.getString("datotid") + ", " + myRsi.getString("notat"));
+            };
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Velg økt du vil bruke som mal(1, 2, 3 osv...)");
+            int id = Integer.parseInt(sc.nextLine());
+            ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT * from treningsøkt inner join øvelseriøkt on " +
+                    "treningsøkt.idtreningsøkt = øvelseriøkt.øktid" +
+                    " where "+id+"=treningsøkt.idtreningsøkt");
+            while(myRs.next()){
+                ovelser += myRs.getString("øvelsesnavn") + " ";
+            }
+            System.out.println(ovelser);
+            System.out.println("Hvilke øvelser ønsker du å bytte ut?( 1, 2, 3 osv...");
+        }catch (SQLException e) {
+            System.out.println("Exception thrown" + e);
+        }
     }
 }
