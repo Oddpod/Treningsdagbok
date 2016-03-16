@@ -199,7 +199,7 @@ public class Treningsdagbokprog {
                 + "(navn, type, beskrivelse, mål, inne)"
                 + "values('"+lineArray[0]+"', '"+lineArray[1]+"', '"+lineArray[2]+"', '"+lineArray[3]+"', '"+inne+"')";
         startConnectiontoDatabaseAndUpdate(sql);
-        addToGroup(lineArray[0], lineArray[1])
+        addToGroup(lineArray[0]);
     }
 
     public void addGroup(String gruppe) {
@@ -209,11 +209,11 @@ public class Treningsdagbokprog {
         startConnectiontoDatabaseAndUpdate(sql);
     }
 
-    public void addToGroup(String ovelse, String type) {
+    public void addToGroup(String ovelse) {
         System.out.println("Skriv hvilken gruppe øvelsen hører til");
         Scanner sc = new Scanner(System.in);
         String gruppe = sc.nextLine();
-        String grupper = ""
+        String grupper = "";
 
         try {
             ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT gruppenavn from undergruppe");
@@ -224,7 +224,7 @@ public class Treningsdagbokprog {
             System.out.println("Exception thrown" + e);
         }
         if (!grupper.contains(gruppe)) {
-            addGroup(gruppe)
+            addGroup(gruppe);
         }
 
     }
