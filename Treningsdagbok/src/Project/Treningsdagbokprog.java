@@ -182,7 +182,6 @@ public class Treningsdagbokprog {
         }
         regForhold(id, lineArray[0]);
     }
-// Registrere ny øvelse
     public void regOvelse() throws SQLException {
         Scanner sc = new Scanner(System.in);
         System.out.println("Skriv inn Navn, type, beskrivelse, mål, inne?");
@@ -196,12 +195,37 @@ public class Treningsdagbokprog {
         } else {
             inne = 0;
         }
-        System.out.println("Hei");
         String sql = " insert into øvelse "
                 + "(navn, type, beskrivelse, mål, inne)"
                 + "values('"+lineArray[0]+"', '"+lineArray[1]+"', '"+lineArray[2]+"', '"+lineArray[3]+"', '"+inne+"')";
         startConnectiontoDatabaseAndUpdate(sql);
+        addToGroup(lineArray[0], lineArray[1])
+    }
 
+    public void addGroup(String gruppe) {
+        String sql = "insert into undergruppe"
+                + "(gruppenavn)"
+                + "values('"+gruppe+"')";
+        startConnectiontoDatabaseAndUpdate(sql);
+    }
+
+    public void addToGroup(String ovelse, String type) {
+        System.out.println("Skriv hvilken gruppe øvelsen hører til");
+        Scanner sc = new Scanner(System.in);
+        String gruppe = sc.nextLine();
+        String grupper = ""
+
+        try {
+            ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT gruppenavn from undergruppe");
+            while (myRs.next()) {
+                grupper += myRs.getString("navn") + " ";
+            }
+        } catch (SQLException e) {
+            System.out.println("Exception thrown" + e);
+        }
+        if (!grupper.contains(gruppe)) {
+            addGroup(gruppe)
+        }
 
     }
 
