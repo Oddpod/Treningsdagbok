@@ -103,9 +103,48 @@ public class Treningsdagbokprog {
     }
 
 
-    public void regForhold() {
+    public void regForhold(int idTreningsøkt, String date) {
         Scanner sc = new Scanner(System.in);
-
+        boolean inne = false;
+        boolean ute = false;
+        ResultSet myRs2;
+        ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT øvelsesnavn FROM øvelseriøkt WHERE øktID = '"+idTreningsøkt+"' ");
+        try {
+            while (myRs.next()) {
+                String ovelse = myRs.getString("ovelsesnavn");
+                myRs2 = startConnectiontoDatabaseAndQuery("SELECT inne from '"+ovelse+"'");
+                int UteEllerInne = myRs2.getInt("inne");
+                if(ute = false) {
+                    ute = (UteEllerInne == 0) ? true : false;
+                }
+                if (inne = false) {
+                    inne = (UteEllerInne == 0) ? false : true;
+                }
+                if((inne && ute) == true) {
+                    break;
+                }
+            }
+            if (inne) {
+                System.out.println("Skriv inn luftforhold og ventilasjon");
+                String line = sc.nextLine();
+                String[] lineArray = line.split(", ");
+                String sql = "insert into inneforhold"
+                        + "( dato, luft, ventilasjon, idtreningsøkt)"
+                        + "values('" + date + "', '"+lineArray[0]+"','"+lineArray[1]+"', '"+idTreningsøkt+"')";
+                startConnectiontoDatabaseAndUpdate(sql);
+            }
+            if (ute) {
+                System.out.println("Skriv inn vær og temperatur");
+                String line = sc.nextLine();
+                String[] lineArray = line.split(", ");
+                String sql = "insert into utendørsforhold"
+                        + "( dato, vær, temperatur, idtreningsøkt)"
+                        + "values('" + date + "', '"+lineArray[0]+"','"+lineArray[1]+"', '"+idTreningsøkt+"')";
+                startConnectiontoDatabaseAndUpdate(sql);
+            }
+        } catch (SQLException e) {
+            System.out.println("Exception thrown" + e);
+        }
     }
 
     public void regTreningsokt(){
