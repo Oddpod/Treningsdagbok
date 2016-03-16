@@ -236,8 +236,16 @@ public class Treningsdagbokprog {
             while(myRs.next()){
                 ovelser += myRs.getString("øvelsesnavn") + " ";
             }
+            sc.close();
+            Scanner sca = new Scanner(System.in);
             System.out.println(ovelser);
-            System.out.println("Hvilke øvelser ønsker du å bytte ut?( 1, 2, 3 osv...");
+            System.out.println("Hvilke øvelser ønsker du å bytte ut?( eks: Løp, Styrke, etc...");
+            sca.useDelimiter(", ");
+            String line = sca.nextLine();
+            String[] lineArray = line.split(", ");
+            ØvelseTilØvelseriøkt (id, ovelser);
+            sca.close();
+
         }catch (SQLException e) {
             System.out.println("Exception thrown" + e);
         }
