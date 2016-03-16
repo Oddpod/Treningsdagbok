@@ -21,7 +21,7 @@ public class Treningsdagbokprog {
     public static void main(String[] args) {
         Treningsdagbokprog dagbok = new Treningsdagbokprog();
         try{
-            dagbok.runUpdate(1);
+            dagbok.regOvelse();
         } catch (Exception e) {
             System.out.println("Exception thrown:" + e);
         }
@@ -199,7 +199,7 @@ public class Treningsdagbokprog {
                 + "(navn, type, beskrivelse, mål, inne)"
                 + "values('"+lineArray[0]+"', '"+lineArray[1]+"', '"+lineArray[2]+"', '"+lineArray[3]+"', '"+inne+"')";
         startConnectiontoDatabaseAndUpdate(sql);
-        addToGroup(lineArray[0]);
+        addToGroup(lineArray[0], lineArray[1]);
     }
 
     public void addGroup(String gruppe) {
@@ -209,7 +209,7 @@ public class Treningsdagbokprog {
         startConnectiontoDatabaseAndUpdate(sql);
     }
 
-    public void addToGroup(String ovelse) {
+    public void addToGroup(String ovelse, String type) {
         System.out.println("Skriv hvilken gruppe øvelsen hører til");
         Scanner sc = new Scanner(System.in);
         String gruppe = sc.nextLine();
@@ -281,13 +281,10 @@ public class Treningsdagbokprog {
         catch (SQLException e) {
             System.out.println("Exception thrown" + e);
         }
-
-
     }
     public void visOkt(int øktid){
-
         try {
-            String key = "select * from treningsøkt where " + øktid + " = idtreningsøkt";
+            String key = "select * from treningsøkt where " + øktid + " = idtreningsøkt order by datotid";
             ResultSet myRs = startConnectiontoDatabaseAndQuery(key);
             while (myRs.next()) {
                 System.out.println(myRs.getString("datotid") + ", " + myRs.getString("varighet") + ", " + myRs.getString("personlig_form")
@@ -304,6 +301,17 @@ public class Treningsdagbokprog {
             ResultSet myRs = startConnectiontoDatabaseAndQuery("select datotid, notat from treningsøkt order by datotid");
             while (myRs.next()){
                 System.out.println(myRs.getString("datotid") + ", " + myRs.getString("notat"));
+            }
+        }catch (SQLException e) {
+            System.out.println("Exception thrown" + e);
+        }
+    }
+    public void visAlleØkter(){
+        try {
+            ResultSet myRs = startConnectiontoDatabaseAndQuery("select * from treningsøkt order by datotid");
+            while (myRs.next()){
+                System.out.println(myRs.getString("datotid") + " " + myRs.getString("varighet") + " " + myRs.getString("personlig_form")
+                + " " + myRs.getString("notat") + " " + myRs.getString("prestasjon") + " " + myRs.getString("sett"));
             }
         }catch (SQLException e) {
             System.out.println("Exception thrown" + e);
