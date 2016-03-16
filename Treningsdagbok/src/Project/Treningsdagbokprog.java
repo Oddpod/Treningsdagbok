@@ -193,9 +193,7 @@ public class Treningsdagbokprog {
 
     public void visLogg(){
         try {
-            Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
-            Statement myStmt = (Statement) myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select datotid, notat from treningsøkt");
+            ResultSet myRs = startConnectiontoDatabaseAndQuery("select datotid, notat from treningsøkt");
             while (myRs.next()){
                 System.out.println(myRs.getString("datotid") + ", " + myRs.getString("notat"));
             }
@@ -207,9 +205,7 @@ public class Treningsdagbokprog {
     public String getOvelser() {
         String ovelser = "";
         try {
-            Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
-            Statement myStmt = (Statement) myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("SELECT  navn from øvelse");
+            ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT navn from øvelse");
             while (myRs.next()) {
                 ovelser = ovelser + myRs.getString("navn") + " ";
             }
