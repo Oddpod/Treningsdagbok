@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;;
 
@@ -16,12 +17,11 @@ public class Treningsdagbokprog {
     private String url = "jdbc:mysql://localhost:3306/treningsdagbokdb";
     private String user = "root";
     private String password = "AVGvisualstudio123?";
-    int id = 0;
 
     public static void main(String[] args) {
         Treningsdagbokprog dagbok = new Treningsdagbokprog();
         try{
-            dagbok.regResultat();
+            dagbok.runUpdate(1);
         } catch (Exception e) {
             System.out.println("Exception thrown:" + e);
         }
@@ -104,20 +104,26 @@ public class Treningsdagbokprog {
 
 
     public void regForhold(int idTreningsøkt, String date) {
-        Scanner sc = new Scanner(System.in);
         boolean inne = false;
         boolean ute = false;
         ResultSet myRs2;
-        ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT øvelsesnavn FROM øvelseriøkt WHERE øktID = '"+idTreningsøkt+"' ");
+        idTreningsøkt = 1;
+        String sql3 = "SELECT øktid, øvelsesnavn FROM øvelseriøkt " +
+                "WHERE '"+idTreningsøkt+"' = øktId";
+        ResultSet myRs = startConnectiontoDatabaseAndQuery(sql3);
         try {
             while (myRs.next()) {
-                String ovelse = myRs.getString("ovelsesnavn");
-                myRs2 = startConnectiontoDatabaseAndQuery("SELECT inne from '"+ovelse+"'");
+                System.out.println("hei");
+                String ovelse = myRs.getString("øvelsesnavn");
+
+                myRs2 = startConnectiontoDatabaseAndQuery("SELECT inne from øvelse " +
+                        "where '"+ovelse+"' = navn");
+                myRs2.next();
                 int UteEllerInne = myRs2.getInt("inne");
-                if(ute = false) {
+                if(ute == false) {
                     ute = (UteEllerInne == 0) ? true : false;
                 }
-                if (inne = false) {
+                if (inne == false) {
                     inne = (UteEllerInne == 0) ? false : true;
                 }
                 if((inne && ute) == true) {
@@ -125,7 +131,9 @@ public class Treningsdagbokprog {
                 }
             }
             if (inne) {
+                Scanner sc = new Scanner(System.in);
                 System.out.println("Skriv inn luftforhold og ventilasjon");
+                sc.useDelimiter(", ");
                 String line = sc.nextLine();
                 String[] lineArray = line.split(", ");
                 String sql = "insert into inneforhold"
@@ -134,6 +142,7 @@ public class Treningsdagbokprog {
                 startConnectiontoDatabaseAndUpdate(sql);
             }
             if (ute) {
+                Scanner sc = new Scanner(System.in);
                 System.out.println("Skriv inn vær og temperatur");
                 String line = sc.nextLine();
                 String[] lineArray = line.split(", ");
@@ -148,6 +157,7 @@ public class Treningsdagbokprog {
     }
 
     public void regTreningsokt(){
+        int id = 0;
         Scanner sc = new Scanner(System.in);
         System.out.println("Oppretter Treningsøkt..");
         System.out.println("Skriv inn datotid, varighet, personlig form, notat, prestasjon");
@@ -165,14 +175,13 @@ public class Treningsdagbokprog {
             ResultSet myRsi = startConnectiontoDatabaseAndQuery(key);
             while (myRsi.next()){
                 System.out.println(myRsi.getString("Max(idtreningsøkt)"));
-                this.id = Integer.parseInt(myRsi.getString("Max(idtreningsøkt)"));
-                System.out.println(this.id);
+                id = Integer.parseInt(myRsi.getString("Max(idtreningsøkt)"));
+                //System.out.println(this.id);
             }
         } catch (Exception e){
             System.out.println("Exception thrown" + e);
         }
-
-            sc.close();
+        regForhold(id, lineArray[0]);
     }
 // Registrere ny øvelse
     public void regOvelse() throws SQLException {
@@ -192,7 +201,6 @@ public class Treningsdagbokprog {
         String sql = " insert into øvelse "
                 + "(navn, type, beskrivelse, mål, inne)"
                 + "values('"+lineArray[0]+"', '"+lineArray[1]+"', '"+lineArray[2]+"', '"+lineArray[3]+"', '"+inne+"')";
-        sc.close();
         startConnectiontoDatabaseAndUpdate(sql);
 
 
@@ -234,7 +242,6 @@ public class Treningsdagbokprog {
                         String line = sc.nextLine();
                         String sql2 = "update øvelse set mål='" + Integer.parseInt(line) + "' where navn ='" + øvelse + "'";
                         startConnectiontoDatabaseAndUpdate(sql2);
-                        sc.close();
                     }
                 } else {
                     if (mål >= bragd) {
@@ -244,7 +251,6 @@ public class Treningsdagbokprog {
                         System.out.println("Skriv inn nytt mål i tid/kg/meter");
                         String sql2 = "uppdate øvelse set mål='" + Integer.parseInt(line) + "' where navn ='" + øvelse + "'";
                         startConnectiontoDatabaseAndUpdate(sql2);
-                        sc.close();
                     }
                 }
             }
@@ -310,16 +316,24 @@ public class Treningsdagbokprog {
             while(myRs.next()){
                 ovelser += myRs.getString("øvelsesnavn") + " ";
             }
-            sc.close();
-            Scanner sca = new Scanner(System.in);
-            System.out.println(ovelser);
-            System.out.println("Hvilke øvelser ønsker du å bytte ut?( eks: Løp, Styrke, etc...");
-            sca.useDelimiter(", ");
-            String line = sca.nextLine();
-            String[] lineArray = line.split(", ");
-            sca.close();
 
         }catch (SQLException e) {
+            System.out.println("Exception thrown" + e);
+        }
+    }
+    public void runUpdate(int id){
+        Scanner sca = new Scanner(System.in);
+        System.out.println("Hvilke øvelser ønsker du å fjerne?( eks: Løp, Styrke, etc...");
+        sca.useDelimiter(", ");
+        String line = sca.nextLine();
+        String[] lineArray = line.split(", ");
+        for(String ovelse: lineArray){
+            startConnectiontoDatabaseAndUpdate("Delete from øvelseriøkt where '"+ovelse+"'= øvelsesnavn");
+        }
+        try{
+            System.out.println();
+            regOvelse();
+        } catch (SQLException e) {
             System.out.println("Exception thrown" + e);
         }
     }
