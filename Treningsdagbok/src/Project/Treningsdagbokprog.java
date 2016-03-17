@@ -20,12 +20,12 @@ public class Treningsdagbokprog {
 
     public static void main(String[] args) {
         Treningsdagbokprog dagbok = new Treningsdagbokprog();
-        try{
+        /*try{
             dagbok.regOvelse();
         } catch (Exception e) {
             System.out.println("Exception thrown:" + e);
         }
-        /*try {
+        try {
             dagbok.regOvelse();
         } catch (Exception e) {
             System.out.println("Exception thrown:" + e);
@@ -57,7 +57,7 @@ public class Treningsdagbokprog {
             Statement myStat = (Statement) myConn.createStatement();
             myStat.executeUpdate(sql);
         }  catch (SQLException e) {
-                System.out.println("Exception thrown " + e);
+            System.out.println("Exception thrown " + e);
         }
     }
 
@@ -73,12 +73,12 @@ public class Treningsdagbokprog {
         return null;
     }
 
-  //  public int getØktid(){
+    //  public int getØktid(){
     //    return int øktid = myStmt.executeUpdate("select count(distinct øktid) from øvelseiøkt;") + 1;
     //}
 
     public void ØvelseTilØvelseriøkt (int id, String ovelser){
-      Scanner sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         System.out.println("Skriv inn navnet på alle øvelsene du vil ha i økten");
         sc.useDelimiter(", ");
         String line = sc.nextLine();
@@ -181,6 +181,8 @@ public class Treningsdagbokprog {
             System.out.println("Exception thrown" + e);
         }
         regForhold(id, lineArray[0]);
+        String ovelser = getOvelser();
+        ØvelseTilØvelseriøkt(id, ovelser);
     }
     public void regOvelse() throws SQLException {
         Scanner sc = new Scanner(System.in);
@@ -218,7 +220,7 @@ public class Treningsdagbokprog {
         try {
             ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT gruppenavn from undergruppe");
             while (myRs.next()) {
-                grupper += myRs.getString("navn") + " ";
+                grupper += myRs.getString("gruppenavn") + " ";
             }
         } catch (SQLException e) {
             System.out.println("Exception thrown" + e);
@@ -311,7 +313,7 @@ public class Treningsdagbokprog {
             ResultSet myRs = startConnectiontoDatabaseAndQuery("select * from treningsøkt order by datotid");
             while (myRs.next()){
                 System.out.println(myRs.getString("datotid") + " " + myRs.getString("varighet") + " " + myRs.getString("personlig_form")
-                + " " + myRs.getString("notat") + " " + myRs.getString("prestasjon") + " " + myRs.getString("sett"));
+                        + " " + myRs.getString("notat") + " " + myRs.getString("prestasjon") + " " + myRs.getString("sett"));
             }
         }catch (SQLException e) {
             System.out.println("Exception thrown" + e);
@@ -332,7 +334,7 @@ public class Treningsdagbokprog {
     }
 
     public void repeatOkt(){
-            String ovelser= "";
+        String ovelser= "";
         try{
             ResultSet myRsi = startConnectiontoDatabaseAndQuery("select datotid, notat from treningsøkt");
             while (myRsi.next()){

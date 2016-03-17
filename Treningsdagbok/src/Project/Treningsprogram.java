@@ -10,12 +10,13 @@ public class Treningsprogram {
         Scanner sc = new Scanner(System.in);
         System.out.println("Hva ønsker de å gjøre?: 1. Registrere treningsøkt, " +
                 "2. Vis treningslogg, 3 vis alle treningsøkter, 4. Lag treningsøkt frå mal, " +
-                "5. Sammenlign beste resultat");
+                "5. Sammenlign med beste resultat");
         int alt = Integer.parseInt(sc.nextLine());
         Treningsdagbokprog tdb = new Treningsdagbokprog();
         switch(alt){
             case 1:
                 System.out.println("regTren");
+                tdb.regTreningsokt();
                 break;
             case 2:
                 System.out.println("vis logg");
@@ -26,6 +27,10 @@ public class Treningsprogram {
                 tdb.visAlleØkter();
                 break;
             case 4:
+                System.out.println("Lag treningsøkt frå mal");
+                break;
+            case 5:
+                System.out.println("Sammenlign beste med resultat");
                 break;
         }
     }
