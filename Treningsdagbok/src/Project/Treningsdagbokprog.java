@@ -298,7 +298,7 @@ public class Treningsdagbokprog {
                         System.out.println("Du har nådd målet for" + øvelse + "på tide å registrere et nytt mål");
                         String line = sc.nextLine();
                         System.out.println("Skriv inn nytt mål i tid/kg/meter");
-                        String sql2 = "uppdate øvelse set mål='" + Integer.parseInt(line) + "' where navn ='" + øvelse + "'";
+                        String sql2 = "update øvelse set mål='" + Integer.parseInt(line) + "' where navn ='" + øvelse + "'";
                         startConnectiontoDatabaseAndUpdate(sql2);
                     }
                 }
