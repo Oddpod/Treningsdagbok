@@ -204,6 +204,28 @@ public class Treningsdagbokprog {
         addToGroup(lineArray[0], lineArray[1]);
     }
 
+    public void regTypeInfo(String type, String ovelse, String gruppenavn) {
+        if(type == "Utholdenhet") {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Skriv inn lengde på øvelsen");
+            String lengde = sc.nextLine()
+            String sql = "insert into utholdenhet"
+                    + "lengde, gruppenavn, øvelsesnavn"
+                    + "values('"+lengde+"', '"+gruppenavn+"', '"+ovelse+"')";
+            startConnectiontoDatabaseAndUpdate(sql);
+        } else {
+            Scanner sc = new Scanner(System.in);
+            sc.useDelimiter(", ");
+            System.out.println("Skriv inn belastning, antall repetisjoner og antall sett");
+            String line = sc.nextLine();
+            String[] lineArray = line.split(", ");
+            String sql = "insert into kondisjon/styrke"
+                    + "belastning, ant repetisjoner, ant sett, gruppenavn, øvelsesnavn"
+                    + "values('"+lineArray[0]+"', '"+lineArray[1]+"', '"+lineArray[2]+"', '"+gruppenavn+"', '"+ovelse+"')";
+            startConnectiontoDatabaseAndUpdate(sql);
+        }
+    }
+
     public void addGroup(String gruppe) {
         String sql = "insert into undergruppe"
                 + "(gruppenavn)"
@@ -228,6 +250,8 @@ public class Treningsdagbokprog {
         if (!grupper.contains(gruppe)) {
             addGroup(gruppe);
         }
+
+        regTypeInfo(type, ovelse, gruppe);
 
     }
 
