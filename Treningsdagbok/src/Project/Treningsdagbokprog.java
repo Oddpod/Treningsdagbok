@@ -19,65 +19,23 @@ public class Treningsdagbokprog {
     private String password = "AVGvisualstudio123?";
 
     public static void main(String[] args) {
-        Treningsdagbokprog dagbok = new Treningsdagbokprog();
-        /*try{
-            dagbok.regOvelse();
-        } catch (Exception e) {
-            System.out.println("Exception thrown:" + e);
-        }
-        try {
-            dagbok.regOvelse();
-        } catch (Exception e) {
-            System.out.println("Exception thrown:" + e);
-        }
-         try{
-
-            dagbok.regTreningsokt();
-        } catch (Exception e){
-            System.out.println("Exception thrown:" + e);
-        }
-        try{
-            dagbok.visOkt(2);
-            dagbok.visOkt(1);
-        }catch (Exception e){
-            System.out.println("Exception thrown:" + e);
-        }*/
-        /*try {
-            String ovelser = dagbok.getOvelser();
-            System.out.println("Øvelser som ligger inne: " + ovelser);
-            dagbok.ØvelseTilØvelseriøkt(1, ovelser);
-        }catch (Exception e){
-            System.out.println("Exception thrown:" + e);
-        } */
     }
 
-    public void startConnectiontoDatabaseAndUpdate(String sql) {
-        try {
+    public void startConnectiontoDatabaseAndUpdate(String sql) throws SQLException {
             Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
             Statement myStat = (Statement) myConn.createStatement();
             myStat.executeUpdate(sql);
-        }  catch (SQLException e) {
-            System.out.println("Exception thrown " + e);
-        }
     }
 
-    public ResultSet startConnectiontoDatabaseAndQuery(String sql) {
-        try {
+    public ResultSet startConnectiontoDatabaseAndQuery(String sql) throws SQLException {
             Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
             Statement myStat = (Statement) myConn.createStatement();
             ResultSet myRsi = myStat.executeQuery(sql);
             return myRsi;
-        }  catch (SQLException e) {
-            System.out.println("Exception thrown " + e);
-        }
-        return null;
     }
 
-    //  public int getØktid(){
-    //    return int øktid = myStmt.executeUpdate("select count(distinct øktid) from øvelseiøkt;") + 1;
-    //}
 
-    public void ØvelseTilØvelseriøkt (int id, String ovelser){
+    public void ØvelseTilØvelseriøkt (int id, String ovelser) throws SQLException {
         Scanner sc = new Scanner(System.in);
         System.out.println("Skriv inn navnet på alle øvelsene du vil ha i økten");
         sc.useDelimiter(", ");
@@ -86,76 +44,70 @@ public class Treningsdagbokprog {
 
         for (String ovelse : lineArray) {
 
-            if( !ovelser.contains(ovelse)){
+            if (!ovelser.contains(ovelse)) {
                 System.out.println(ovelse + " ligger ikke inne i databasen og må derfor opprettes");
-                try {
-                    regOvelse();
-                } catch (SQLException e) {
-                    System.out.println("Exception thrown" + e);
-                }
+
+                regOvelse();
+
             }
             String sql = " insert into øvelseriøkt "
                     + "(øktid, øvelsesnavn)"
-                    + "values( '"+id+"', '"+ovelse+"')";
+                    + "values( '" + id + "', '" + ovelse + "')";
             startConnectiontoDatabaseAndUpdate(sql);
         }
     }
 
 
-    public void regForhold(int idTreningsøkt, String date) {
+    public void regForhold(int idTreningsøkt, String date) throws SQLException {
         boolean inne = false;
         boolean ute = false;
         ResultSet myRs2;
         idTreningsøkt = 1;
         String sql3 = "SELECT øktid, øvelsesnavn FROM øvelseriøkt " +
-                "WHERE '"+idTreningsøkt+"' = øktId";
+                "WHERE '" + idTreningsøkt + "' = øktId";
         ResultSet myRs = startConnectiontoDatabaseAndQuery(sql3);
-        try {
-            while (myRs.next()) {
-                System.out.println("hei");
-                String ovelse = myRs.getString("øvelsesnavn");
+        while (myRs.next()) {
+            System.out.println("hei");
+            String ovelse = myRs.getString("øvelsesnavn");
 
-                myRs2 = startConnectiontoDatabaseAndQuery("SELECT inne from øvelse " +
-                        "where '"+ovelse+"' = navn");
-                myRs2.next();
-                int UteEllerInne = myRs2.getInt("inne");
-                if(ute == false) {
-                    ute = (UteEllerInne == 0) ? true : false;
-                }
-                if (inne == false) {
-                    inne = (UteEllerInne == 0) ? false : true;
-                }
-                if((inne && ute) == true) {
-                    break;
-                }
+            myRs2 = startConnectiontoDatabaseAndQuery("SELECT inne from øvelse " +
+                    "where '" + ovelse + "' = navn");
+            myRs2.next();
+            int UteEllerInne = myRs2.getInt("inne");
+            if (ute == false) {
+                ute = (UteEllerInne == 0) ? true : false;
             }
-            if (inne) {
-                Scanner sc = new Scanner(System.in);
-                System.out.println("Skriv inn luftforhold og ventilasjon");
-                sc.useDelimiter(", ");
-                String line = sc.nextLine();
-                String[] lineArray = line.split(", ");
-                String sql = "insert into inneforhold"
-                        + "( dato, luft, ventilasjon, idtreningsøkt)"
-                        + "values('" + date + "', '"+lineArray[0]+"','"+lineArray[1]+"', '"+idTreningsøkt+"')";
-                startConnectiontoDatabaseAndUpdate(sql);
+            if (inne == false) {
+                inne = (UteEllerInne == 0) ? false : true;
             }
-            if (ute) {
-                Scanner sc = new Scanner(System.in);
-                System.out.println("Skriv inn vær og temperatur");
-                String line = sc.nextLine();
-                String[] lineArray = line.split(", ");
-                String sql = "insert into utendørsforhold"
-                        + "( dato, vær, temperatur, idtreningsøkt)"
-                        + "values('" + date + "', '"+lineArray[0]+"','"+lineArray[1]+"', '"+idTreningsøkt+"')";
-                startConnectiontoDatabaseAndUpdate(sql);
+            if ((inne && ute) == true) {
+                break;
             }
-        } catch (SQLException e) {
-            System.out.println("Exception thrown" + e);
+        }
+        if (inne) {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Skriv inn luftforhold og ventilasjon");
+            sc.useDelimiter(", ");
+            String line = sc.nextLine();
+            String[] lineArray = line.split(", ");
+            String sql = "insert into inneforhold"
+                    + "( dato, luft, ventilasjon, idtreningsøkt)"
+                    + "values('" + date + "', '" + lineArray[0] + "','" + lineArray[1] + "', '" + idTreningsøkt + "')";
+            startConnectiontoDatabaseAndUpdate(sql);
+        }
+        if (ute) {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Skriv inn vær og temperatur");
+            String line = sc.nextLine();
+            String[] lineArray = line.split(", ");
+            String sql = "insert into utendørsforhold"
+                    + "( dato, vær, temperatur, idtreningsøkt)"
+                    + "values('" + date + "', '" + lineArray[0] + "','" + lineArray[1] + "', '" + idTreningsøkt + "')";
+            startConnectiontoDatabaseAndUpdate(sql);
         }
     }
 
-    public void regTreningsokt(){
+    public void regTreningsokt() throws SQLException{
         int id = 0;
         Scanner sc = new Scanner(System.in);
         System.out.println("Oppretter Treningsøkt..");
@@ -163,23 +115,15 @@ public class Treningsdagbokprog {
         sc.useDelimiter(", ");
         String line = sc.nextLine();
         String[] lineArray = line.split(", ");
-        try {
-            /*String sql = "insert into treningsøkt "
-                    + "( datotid, varighet, personlig_form, notat, prestasjon )"
-                    + " values('" + lineArray[0] + "', '" + lineArray[1] + "', '" + lineArray[2] + "', '"
-                    + lineArray[3] + "', '" + lineArray[4] + "')";
-            myStat.executeUpdate(sql);
-            */
-            String key = "Select Max(idtreningsøkt) from treningsøkt";
-            ResultSet myRsi = startConnectiontoDatabaseAndQuery(key);
-            while (myRsi.next()){
-                System.out.println(myRsi.getString("Max(idtreningsøkt)"));
-                id = Integer.parseInt(myRsi.getString("Max(idtreningsøkt)"));
-                //System.out.println(this.id);
-            }
-        } catch (Exception e){
-            System.out.println("Exception thrown" + e);
-        }
+        String sql = "insert into treningsøkt "
+                + "( datotid, varighet, personlig_form, notat, prestasjon )"
+                + " values('" + lineArray[0] + "', '" + lineArray[1] + "', '" + lineArray[2] + "', '"
+                + lineArray[3] + "', '" + lineArray[4] + "')";
+        startConnectiontoDatabaseAndUpdate(sql);
+
+        String key = "Select Max(idtreningsøkt) from treningsøkt";
+        ResultSet myRsi = startConnectiontoDatabaseAndQuery(key);
+        id = Integer.parseInt(myRsi.getString("Max(idtreningsøkt)"));
         regForhold(id, lineArray[0]);
         String ovelser = getOvelser();
         ØvelseTilØvelseriøkt(id, ovelser);
@@ -204,7 +148,7 @@ public class Treningsdagbokprog {
         addToGroup(lineArray[0], lineArray[1]);
     }
 
-    public void regTypeInfo(String type, String ovelse, String gruppenavn) {
+    public void regTypeInfo(String type, String ovelse, String gruppenavn) throws SQLException {
         if(type == "Utholdenhet") {
             Scanner sc = new Scanner(System.in);
             System.out.println("Skriv inn lengde på øvelsen");
@@ -226,14 +170,14 @@ public class Treningsdagbokprog {
         }
     }
 
-    public void addGroup(String gruppe) {
+    public void addGroup(String gruppe) throws SQLException {
         String sql = "insert into undergruppe"
                 + "(gruppenavn)"
                 + "values('"+gruppe+"')";
         startConnectiontoDatabaseAndUpdate(sql);
     }
 
-    public void addToGroup(String ovelse, String type) {
+    public void addToGroup(String ovelse, String type) throws SQLException {
         System.out.println("Skriv hvilken gruppe øvelsen hører til");
         Scanner sc = new Scanner(System.in);
         String gruppe = sc.nextLine();
@@ -260,23 +204,19 @@ public class Treningsdagbokprog {
         System.out.println("Skriv inn øvelsesnavn, bragd, antallsett");
         sc.useDelimiter(",");
         String line = sc.nextLine();
-        String[] lineArray= line.split(", ");
-        try {
-            Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
-            Statement mystat = (Statement) myConn.createStatement();
-            String sql = " insert into resultat "
-                    + "(øvelsesnavn, bragd, sett)"
-                    + "values ('" + lineArray[0] + "', '" + lineArray[1] + "', '" + lineArray[2] + "')";
-            mystat.executeUpdate(sql);
-        } catch (SQLException e) {
-            System.out.println("Exception thrown" + e);
-        }
+        String[] lineArray = line.split(", ");
+        Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
+        Statement mystat = (Statement) myConn.createStatement();
+        String sql = " insert into resultat "
+                + "(øvelsesnavn, bragd, sett)"
+                + "values ('" + lineArray[0] + "', '" + lineArray[1] + "', '" + lineArray[2] + "')";
+        mystat.executeUpdate(sql);
+
         MålVsBragd(Integer.parseInt(lineArray[1]), lineArray[0]);
     }
 
-    public void MålVsBragd(int bragd, String øvelse ) {
+    public void MålVsBragd(int bragd, String øvelse ) throws SQLException {
         String sql = "select mål, måltype from øvelse where navn = '"+øvelse+"'";
-        try {
             ResultSet result = startConnectiontoDatabaseAndQuery(sql);
             while(result.next()) {
                 int mål = result.getInt("mål");
@@ -303,96 +243,74 @@ public class Treningsdagbokprog {
                     }
                 }
             }
-        }
-        catch (SQLException e) {
-            System.out.println("Exception thrown" + e);
-        }
+
     }
-    public void visOkt(int øktid){
-        try {
+    public void visOkt(int øktid) throws SQLException {
+
             String key = "select * from treningsøkt where " + øktid + " = idtreningsøkt order by datotid";
             ResultSet myRs = startConnectiontoDatabaseAndQuery(key);
             while (myRs.next()) {
                 System.out.println(myRs.getString("datotid") + ", " + myRs.getString("varighet") + ", " + myRs.getString("personlig_form")
                         + ", " + myRs.getString("notat") + ", " + myRs.getString("prestasjon") + ", " + myRs.getString("sett"));
             }
-        } catch (SQLException e) {
-            System.out.println("Exception thrown" + e);
-        }
+
 
     }
 
-    public void visLogg(){
-        try {
+    public void visLogg() throws SQLException{
+
             ResultSet myRs = startConnectiontoDatabaseAndQuery("select datotid, notat from treningsøkt order by datotid");
             while (myRs.next()){
                 System.out.println(myRs.getString("datotid") + ", " + myRs.getString("notat"));
             }
-        }catch (SQLException e) {
-            System.out.println("Exception thrown" + e);
-        }
+
     }
-    public void visAlleØkter(){
-        try {
-            ResultSet myRs = startConnectiontoDatabaseAndQuery("select * from treningsøkt order by datotid");
-            while (myRs.next()){
-                System.out.println(myRs.getString("datotid") + " " + myRs.getString("varighet") + " " + myRs.getString("personlig_form")
-                        + " " + myRs.getString("notat") + " " + myRs.getString("prestasjon") + " " + myRs.getString("sett"));
-            }
-        }catch (SQLException e) {
-            System.out.println("Exception thrown" + e);
+    public void visAlleØkter() throws SQLException{
+        ResultSet myRs = startConnectiontoDatabaseAndQuery("select * from treningsøkt order by datotid");
+        while (myRs.next()) {
+            System.out.println(myRs.getString("datotid") + " " + myRs.getString("varighet") + " " + myRs.getString("personlig_form")
+                    + " " + myRs.getString("notat") + " " + myRs.getString("prestasjon") + " " + myRs.getString("sett"));
         }
     }
 
-    public String getOvelser() {
+    public String getOvelser() throws SQLException {
         String ovelser = "";
-        try {
-            ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT navn from øvelse");
-            while (myRs.next()) {
-                ovelser = ovelser + myRs.getString("navn") + " ";
-            }
-        } catch (SQLException e) {
-            System.out.println("Exception thrown" + e);
+        ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT navn from øvelse");
+        while (myRs.next()) {
+            ovelser = ovelser + myRs.getString("navn") + " ";
         }
+
         return ovelser;
     }
 
-    public String getOvelseriokt(int id){
+    public String getOvelseriokt(int id) throws SQLException{
         String ovelseriokt = "";
-        try {
-            ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT øvelsesnavn from øvelseriøkt where '" + id + "' = øktid");
-            while (myRs.next()) {
-                ovelseriokt = ovelseriokt + myRs.getString("øvelsesnavn") + " ";
-            }
-        }catch (SQLException e) {
-                System.out.println("Exception thrown" + e);
-            }
+        ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT øvelsesnavn from øvelseriøkt where '" + id + "' = øktid");
+        while (myRs.next()) {
+            ovelseriokt = ovelseriokt + myRs.getString("øvelsesnavn") + " ";
+        }
         return ovelseriokt;
     }
-    public void repeatOkt(){
+    public void repeatOkt() throws SQLException{
         String ovelser= "";
-        try{
-            ResultSet myRsi = startConnectiontoDatabaseAndQuery("select datotid, notat from treningsøkt");
-            while (myRsi.next()){
-                System.out.println(myRsi.getString("datotid") + ", " + myRsi.getString("notat"));
-            };
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Velg økt du vil bruke som mal(1, 2, 3 osv...)");
-            int id = Integer.parseInt(sc.nextLine());
-            ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT * from treningsøkt inner join øvelseriøkt on " +
-                    "treningsøkt.idtreningsøkt = øvelseriøkt.øktid" +
-                    " where "+id+"=treningsøkt.idtreningsøkt");
-            while(myRs.next()){
-                ovelser += myRs.getString("øvelsesnavn") + " ";
-            }
-            runUpdate(id);
-
-        }catch (SQLException e) {
-            System.out.println("Exception thrown" + e);
+        ResultSet myRsi = startConnectiontoDatabaseAndQuery("select datotid, notat from treningsøkt");
+        while (myRsi.next()) {
+            System.out.println(myRsi.getString("datotid") + ", " + myRsi.getString("notat"));
         }
+        ;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Velg økt du vil bruke som mal(1, 2, 3 osv...)");
+        int id = Integer.parseInt(sc.nextLine());
+        ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT * from treningsøkt inner join øvelseriøkt on " +
+                "treningsøkt.idtreningsøkt = øvelseriøkt.øktid" +
+                " where " + id + "=treningsøkt.idtreningsøkt");
+        while (myRs.next()) {
+            ovelser += myRs.getString("øvelsesnavn") + " ";
+        }
+        runUpdate(id);
     }
     // sletter øvelser som blir skrevet inn
-    public void runUpdate(int id){
+    public void runUpdate(int id) throws SQLException {
         Scanner sca = new Scanner(System.in);
         String ovelseriokt = getOvelseriokt(id);
         System.out.println("Hvilke øvelser ønsker du å fjerne? " + ovelseriokt);
