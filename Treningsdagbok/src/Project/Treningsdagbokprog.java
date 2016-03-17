@@ -265,11 +265,12 @@ public class Treningsdagbokprog {
             }
 
     }
-    public void visAlleØkter() throws SQLException{
-        ResultSet myRs = startConnectiontoDatabaseAndQuery("select * from treningsøkt order by datotid");
+    public void visAlleØkter(String Startdate, String Sluttdato) throws SQLException{
+        ResultSet myRs = startConnectiontoDatabaseAndQuery("select * from treningsøkt where datotid > '"+Startdate+"'" +
+                " and datotid < '"+Sluttdato+"' order by datotid");
         while (myRs.next()) {
             System.out.println(myRs.getString("datotid") + " " + myRs.getString("varighet") + " " + myRs.getString("personlig_form")
-                    + " " + myRs.getString("notat") + " " + myRs.getString("prestasjon") + " " + myRs.getString("sett"));
+                    + " " + myRs.getString("notat") + " " + myRs.getString("prestasjon"));
         }
     }
 
@@ -291,23 +292,37 @@ public class Treningsdagbokprog {
         }
         return ovelseriokt;
     }
-    public void repeatOkt() throws SQLException{
+    public void repeatOkt(int choice) throws SQLException{
         String ovelser= "";
         ResultSet myRsi = startConnectiontoDatabaseAndQuery("select datotid, notat from treningsøkt");
         while (myRsi.next()) {
             System.out.println(myRsi.getString("datotid") + ", " + myRsi.getString("notat"));
         }
         ;
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Velg økt du vil bruke som mal(1, 2, 3 osv...)");
-        int id = Integer.parseInt(sc.nextLine());
-        ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT * from treningsøkt inner join øvelseriøkt on " +
-                "treningsøkt.idtreningsøkt = øvelseriøkt.øktid" +
-                " where " + id + "=treningsøkt.idtreningsøkt");
-        while (myRs.next()) {
-            ovelser += myRs.getString("øvelsesnavn") + " ";
+        if(choice == 1){
+            Scanner sca = new Scanner(System.in);
+            System.out.println("Velg økt(1, 2, 3 osv...");
+            int id = Integer.parseInt(sca.nextLine());
+            ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT * from treningsøkt inner join øvelseriøkt on " +
+                    "treningsøkt.idtreningsøkt = øvelseriøkt.øktid" +
+                    " where " + id + "=treningsøkt.idtreningsøkt");
+            while (myRs.next()) {
+                ovelser += myRs.getString("øvelsesnavn") + " ";
+            }
+            System.out.println(ovelser);
         }
-        runUpdate(id);
+        else {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Velg økt du vil bruke som mal(1, 2, 3 osv...)");
+            int id = Integer.parseInt(sc.nextLine());
+            ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT * from treningsøkt inner join øvelseriøkt on " +
+                    "treningsøkt.idtreningsøkt = øvelseriøkt.øktid" +
+                    " where " + id + "=treningsøkt.idtreningsøkt");
+            while (myRs.next()) {
+                ovelser += myRs.getString("øvelsesnavn") + " ";
+            }
+            runUpdate(id);
+        }
     }
     // sletter øvelser som blir skrevet inn
     public void runUpdate(int id) throws SQLException {
