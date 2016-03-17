@@ -18,8 +18,6 @@ public class Treningsdagbokprog {
     private String user = "root";
     private String password = "AVGvisualstudio123?";
 
-    public static void main(String[] args) {
-    }
 
     public void startConnectiontoDatabaseAndUpdate(String sql) throws SQLException {
             Connection myConn = (Connection) DriverManager.getConnection(url, user, password);
