@@ -208,7 +208,7 @@ public class Treningsdagbokprog {
         if(type == "Utholdenhet") {
             Scanner sc = new Scanner(System.in);
             System.out.println("Skriv inn lengde på øvelsen");
-            String lengde = sc.nextLine()
+            String lengde = sc.nextLine();
             String sql = "insert into utholdenhet"
                     + "lengde, gruppenavn, øvelsesnavn"
                     + "values('"+lengde+"', '"+gruppenavn+"', '"+ovelse+"')";
@@ -367,6 +367,7 @@ public class Treningsdagbokprog {
         }catch (SQLException e) {
                 System.out.println("Exception thrown" + e);
             }
+        return ovelseriokt;
     }
     public void repeatOkt(){
         String ovelser= "";
@@ -393,7 +394,8 @@ public class Treningsdagbokprog {
     // sletter øvelser som blir skrevet inn
     public void runUpdate(int id){
         Scanner sca = new Scanner(System.in);
-        System.out.println("Hvilke øvelser ønsker du å fjerne?( eks: Løp, Styrke, etc...");
+        String ovelseriokt = getOvelseriokt(id);
+        System.out.println("Hvilke øvelser ønsker du å fjerne? " + ovelseriokt);
         sca.useDelimiter(", ");
         String line = sca.nextLine();
         String[] lineArray = line.split(", ");
