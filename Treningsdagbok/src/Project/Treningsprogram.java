@@ -28,6 +28,7 @@ public class Treningsprogram {
                 break;
             case 4:
                 System.out.println("Lag treningsøkt frå mal");
+                tdb.repeatOkt();
                 break;
             case 5:
                 System.out.println("Sammenlign beste med resultat");

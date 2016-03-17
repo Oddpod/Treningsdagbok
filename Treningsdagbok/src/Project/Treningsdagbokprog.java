@@ -357,6 +357,17 @@ public class Treningsdagbokprog {
         return ovelser;
     }
 
+    public String getOvelseriokt(int id){
+        String ovelseriokt = "";
+        try {
+            ResultSet myRs = startConnectiontoDatabaseAndQuery("SELECT øvelsesnavn from øvelseriøkt where '" + id + "' = øktid");
+            while (myRs.next()) {
+                ovelseriokt = ovelseriokt + myRs.getString("øvelsesnavn") + " ";
+            }
+        }catch (SQLException e) {
+                System.out.println("Exception thrown" + e);
+            }
+    }
     public void repeatOkt(){
         String ovelser= "";
         try{
